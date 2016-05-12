@@ -28,6 +28,25 @@ class OpenCommercial {
     inputLine = keyboard.readLine();
 
     /* Replace this comment with your solution.  */
+    int count = 0;
+    try {
+        URL webUrl = new URL("http://www."+inputLine + ".com");
+        BufferedReader in = new BufferedReader(
+                new InputStreamReader(webUrl.openStream()));
+        String inputs;
+        while ((inputs = in.readLine())!= null && count < 5) {
+            System.out.println(inputs);
+            count ++;
+        }
+        in.close();
+    } catch (MalformedURLException me) {
+        System.out.println(me);
 
+    } catch (IOException ioe) {
+        System.out.println(ioe);
+        
+    }
+    System.out.println(count);
+    
   }
 }
