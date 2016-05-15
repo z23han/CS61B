@@ -15,6 +15,8 @@
  *  See the README file accompanying this project for additional details.
  */
 
+import java.util.Arrays;
+
 public class PixImage {
 
   /**
@@ -22,8 +24,9 @@ public class PixImage {
    *  variables MUST be private.
    */
 
-
-
+    private int width;
+    private int height;
+    private short[][][] pixels;
 
   /**
    * PixImage() constructs an empty PixImage with a specified width and height.
@@ -34,6 +37,18 @@ public class PixImage {
    */
   public PixImage(int width, int height) {
     // Your solution here.
+  
+      this.width = width;
+      this.height = height;
+      this.pixels = new short[this.width][this.height][3];
+      
+      for (int i = 0; i < this.width; i++) {
+          for (int j = 0; j < this.height; j++) {
+              this.pixels[i][j][0] = 0;
+              this.pixels[i][j][1] = 0;
+              this.pixels[i][j][2] = 0;
+          }
+      }
   }
 
   /**
@@ -43,7 +58,7 @@ public class PixImage {
    */
   public int getWidth() {
     // Replace the following line with your solution.
-    return 1;
+    return this.width;
   }
 
   /**
@@ -53,7 +68,7 @@ public class PixImage {
    */
   public int getHeight() {
     // Replace the following line with your solution.
-    return 1;
+    return this.height;
   }
 
   /**
@@ -65,7 +80,7 @@ public class PixImage {
    */
   public short getRed(int x, int y) {
     // Replace the following line with your solution.
-    return 0;
+    return this.pixels[x][y][0];
   }
 
   /**
@@ -77,7 +92,7 @@ public class PixImage {
    */
   public short getGreen(int x, int y) {
     // Replace the following line with your solution.
-    return 0;
+    return this.pixels[x][y][1];
   }
 
   /**
@@ -89,7 +104,7 @@ public class PixImage {
    */
   public short getBlue(int x, int y) {
     // Replace the following line with your solution.
-    return 0;
+    return this.pixels[x][y][2];
   }
 
   /**
@@ -107,6 +122,32 @@ public class PixImage {
    */
   public void setPixel(int x, int y, short red, short green, short blue) {
     // Your solution here.
+
+      this.pixels[x][y][0] = red;
+      this.pixels[x][y][1] = green;
+      this.pixels[x][y][2] = blue;
+  }
+  
+  /**
+   * setImage() copies image from to image to. 
+   *
+   * @param from image copied from
+   * @param to image copied to
+   */
+  public void setImage(PixImage from, PixImage to) {
+      if (from.width != to.width || from.height != to.height) {
+          System.out.println("image from and image to are not width/height equal!");
+          return;
+      }
+
+      for (int i = 0; i < from.width; i++) {
+          for (int j = 0; j < from.height; j++) {
+              to.pixels[i][j][0] = from.pixels[i][j][0];
+              to.pixels[i][j][1] = from.pixels[i][j][1];
+              to.pixels[i][j][2] = from.pixels[i][j][2];
+          }
+      }
+      return;
   }
 
   /**
@@ -120,7 +161,15 @@ public class PixImage {
    */
   public String toString() {
     // Replace the following line with your solution.
-    return "";
+    /*
+      for (int i = 0; i < this.width; i++) {
+        for (int j = 0; j < this.height; j++) {
+            System.out.print(this.pixels[i][j]);
+        }
+        System.out.println();
+    }
+    */
+    return Arrays.deepToString(this.pixels);
   }
 
   /**
@@ -154,7 +203,86 @@ public class PixImage {
    */
   public PixImage boxBlur(int numIterations) {
     // Replace the following line with your solution.
-    return this;
+    
+      if (numIterations <= 0) {
+          return this;
+      }
+
+      PixImage bimg = new PixImage(this.width, this.height);
+      setImage(this, bimg);
+      short[][][] pixels = bimg.pixels;
+      
+      for (int k = 0; k < numIterations; k++) {
+          for (int i = 0; i < this.width; i++) {
+              for (int j = 0; j < this.height; j++) {
+                  if (i == 0 && j == 0) {
+                      pixels[i][j][0] = (short)((int)(pixels[i][j][0] + pixels[i+1][j][0] + pixels[i][j+1][0] + pixels[i+1][j+1][0]) / 4);
+                      pixels[i][j][1] = (short)((int)(pixels[i][j][1] + pixels[i+1][j][1] + pixels[i][j+1][1] + pixels[i+1][j+1][1]) / 4);
+                      pixels[i][j][2] = (short)((int)(pixels[i][j][2] + pixels[i+1][j][2] + pixels[i][j+1][2] + pixels[i+1][j+1][2]) / 4);
+                  }
+                  else if (i == 0 && j == (this.height-1)) {
+                      pixels[i][j][0] = (short)((int)(pixels[i][j][0] + pixels[i+1][j][0] + pixels[i][j-1][0] + pixels[i+1][j-1][0]) / 4);
+                      pixels[i][j][1] = (short)((int)(pixels[i][j][1] + pixels[i+1][j][1] + pixels[i][j-1][1] + pixels[i+1][j-1][1]) / 4);
+                      pixels[i][j][2] = (short)((int)(pixels[i][j][2] + pixels[i+1][j][2] + pixels[i][j-1][2] + pixels[i+1][j-1][2]) / 4);
+                  }
+                  else if (i == (this.width-1) && j == 0) {
+                      pixels[i][j][0] = (short)((int)(pixels[i][j][0] + pixels[i-1][j][0] + pixels[i][j+1][0] + pixels[i-1][j+1][0]) / 4);
+                      pixels[i][j][1] = (short)((int)(pixels[i][j][1] + pixels[i-1][j][1] + pixels[i][j+1][1] + pixels[i-1][j+1][1]) / 4);
+                      pixels[i][j][2] = (short)((int)(pixels[i][j][2] + pixels[i-1][j][2] + pixels[i][j+1][2] + pixels[i-1][j+1][2]) / 4);
+                  }
+                  else if (i == (this.width - 1) && (j == this.height - 1)) {
+                      pixels[i][j][0] = (short)((int)(pixels[i][j][0] + pixels[i-1][j][0] + pixels[i][j-1][0] + pixels[i-1][j-1][0]) / 4);
+                      pixels[i][j][1] = (short)((int)(pixels[i][j][1] + pixels[i-1][j][1] + pixels[i][j-1][1] + pixels[i-1][j-1][1]) / 4);
+                      pixels[i][j][2] = (short)((int)(pixels[i][j][2] + pixels[i-1][j][2] + pixels[i][j-1][2] + pixels[i-1][j-1][2]) / 4);
+                  } 
+                  else if (i == 0 && (j != 0 || j != this.height - 1)) {
+                      pixels[i][j][0] = (short)((int)(pixels[i][j][0] + pixels[i][j-1][0] + pixels[i][j+1][0] + pixels[i+1][j][0] 
+                              + pixels[i+1][j-1][0] + pixels[i+1][j+1][0]) / 6);
+                      pixels[i][j][1] = (short)((int)(pixels[i][j][1] + pixels[i][j-1][1] + pixels[i][j+1][1] + pixels[i+1][j][1] 
+                              + pixels[i+1][j-1][1] + pixels[i+1][j+1][1]) / 6);
+                      pixels[i][j][2] = (short)((int)(pixels[i][j][2] + pixels[i][j-1][2] + pixels[i][j+1][2] + pixels[i+1][j][2] 
+                              + pixels[i+1][j-1][2] + pixels[i+1][j+1][2]) / 6);
+                  } 
+                  else if (i == (this.width - 1) && (j != 0 || j != this.height - 1)) {
+                      pixels[i][j][0] = (short)((int)(pixels[i][j][0] + pixels[i][j-1][0] + pixels[i][j+1][0] + pixels[i-1][j][0] 
+                              + pixels[i-1][j-1][0] + pixels[i-1][j+1][0]) / 6);
+                      pixels[i][j][1] = (short)((int)(pixels[i][j][1] + pixels[i][j-1][1] + pixels[i][j+1][1] + pixels[i-1][j][1] 
+                              + pixels[i-1][j-1][1] + pixels[i-1][j+1][1]) / 6);
+                      pixels[i][j][2] = (short)((int)(pixels[i][j][2] + pixels[i][j-1][2] + pixels[i][j+1][2] + pixels[i-1][j][2] 
+                              + pixels[i-1][j-1][2] + pixels[i-1][j+1][2]) / 6);
+                  }
+                  else if ((i != 0 || i != this.width - 1) && j == 0) {
+                      pixels[i][j][0] = (short)((int)(pixels[i][j][0] + pixels[i+1][j][0] + pixels[i-1][j][0] + pixels[i][j+1][0] 
+                              + pixels[i-1][j+1][0] + pixels[i+1][j+1][0]) / 6);
+                      pixels[i][j][1] = (short)((int)(pixels[i][j][1] + pixels[i+1][j][1] + pixels[i-1][j][1] + pixels[i][j+1][1] 
+                              + pixels[i-1][j+1][1] + pixels[i+1][j+1][1]) / 6);
+                      pixels[i][j][2] = (short)((int)(pixels[i][j][2] + pixels[i+1][j][2] + pixels[i-1][j][2] + pixels[i][j+1][2] 
+                              + pixels[i-1][j+1][2] + pixels[i+1][j+1][2]) / 6);
+                  } 
+                  else if ((i != 0 || i != this.width - 1) && j == (this.height - 1)) {
+                      pixels[i][j][0] = (short)((int)(pixels[i][j][0] + pixels[i+1][j][0] + pixels[i-1][j][0] + pixels[i][j-1][0] 
+                              + pixels[i-1][j-1][0] + pixels[i+1][j-1][0]) / 6);
+                      pixels[i][j][1] = (short)((int)(pixels[i][j][1] + pixels[i+1][j][1] + pixels[i-1][j][1] + pixels[i][j-1][1] 
+                              + pixels[i-1][j-1][1] + pixels[i+1][j-1][1]) / 6);
+                      pixels[i][j][2] = (short)((int)(pixels[i][j][2] + pixels[i+1][j][2] + pixels[i-1][j][2] + pixels[i][j-1][2] 
+                              + pixels[i-1][j-1][2] + pixels[i+1][j-1][2]) / 6);
+                  }
+                  else {
+                      pixels[i][j][0] = (short)((int)(pixels[i][j][0] + pixels[i-1][j][0] + pixels[i+1][j][0] + 
+                              pixels[i][j-1][0] + pixels[i-1][j-1][0] + pixels[i+1][j-1][0] + 
+                              pixels[i][j+1][0] + pixels[i-1][j+1][0] + pixels[i+1][j+1][0]) / 9);
+                      pixels[i][j][1] = (short)((int)(pixels[i][j][1] + pixels[i-1][j][1] + pixels[i+1][j][1] + 
+                              pixels[i][j-1][1] + pixels[i-1][j-1][1] + pixels[i+1][j-1][1] + 
+                              pixels[i][j+1][1] + pixels[i-1][j+1][1] + pixels[i+1][j+1][1]) / 9);
+                      pixels[i][j][2] = (short)((int)(pixels[i][j][2] + pixels[i-1][j][2] + pixels[i+1][j][2] + 
+                              pixels[i][j-1][2] + pixels[i-1][j-1][2] + pixels[i+1][j-1][2] + 
+                              pixels[i][j+1][2] + pixels[i-1][j+1][2] + pixels[i+1][j+1][2]) / 9);
+                  }
+              }
+          }
+      }
+      
+      return bimg;
   }
 
   /**
@@ -199,7 +327,9 @@ public class PixImage {
    */
   public PixImage sobelEdges() {
     // Replace the following line with your solution.
-    return this;
+    
+      
+      return this;
     // Don't forget to use the method mag2gray() above to convert energies to
     // pixel intensities.
   }
