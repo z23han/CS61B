@@ -328,10 +328,97 @@ public class PixImage {
   public PixImage sobelEdges() {
     // Replace the following line with your solution.
     
+      PixImage img = new PixImage(this.width, this.height);
+    
+      short[][] gx_op = new short[][]{{1, 0, -1}, {2, 0, -2}, {1, 0, -1}};
+      short[][] gy_op = new short[][]{{1, 2, 1}, {0, 0, 0}, {-1, -2, -1}};
+
+      short[][] pixelFrame = new short[3][3];
+      long energy;
+      short gx_red, gy_red, gx_green, gy_green, gx_blue, gy_blue, intensity;
       
-      return this;
+      for (int i = 0; i < this.width; i++) {
+          for (int j = 0; j < this.height; j++) {
+              /* red */
+              frame_matrix(pixelFrame, i, j, 0);
+              gx_red = matrixMult(gx_op, pixelFrame);
+              gy_red = matrixMult(gy_op, pixelFrame);
+              /* green */
+              frame_matrix(pixelFrame, i, j, 1);
+              gx_green = matrixMult(gx_op, pixelFrame);
+              gy_green = matrixMult(gy_op, pixelFrame);
+              /* blue */
+              frame_matrix(pixelFrame, i, j, 2);
+              gx_blue = matrixMult(gx_op, pixelFrame);
+              gy_blue = matrixMult(gy_op, pixelFrame);
+              
+              /* sum the squares of the 3 gradients at each pixels */
+              /* red */
+              energy = (long)(gx_red^2 + gy_red^2);
+              img.pixels[i][j][0] = mag2gray(energy);
+              
+              /* green */
+              energy = (long)(gx_green^2 + gy_green^2);
+              img.pixels[i][j][1] = mag2gray(energy);
+              
+              /* blue */
+              energy = (long)(gx_blue^2 + gy_blue^2);
+              img.pixels[i][j][2] = mag2gray(energy);
+          }
+      }
+      
+
+      return img;
     // Don't forget to use the method mag2gray() above to convert energies to
     // pixel intensities.
+  }
+  
+  
+  /* 
+   * add values to the pixel frame matrix array based on the indices i & j
+   * */
+  public void frame_matrix(short[][] pixelFrame, int x, int y, int color) {
+      int x_index = 0;
+      int y_index = 0;
+      
+      for (int i = 0; i < 3; i++) {
+          for (int j = 0; j < 3; j++) {
+              if ((x + i - 1) < 0) {
+                  x_index = 0;
+              } else if ((x + i - 1) > (this.width - 1)) {
+                  x_index = this.width - 1;
+              } else {
+                  x_index = x + i - 1;
+              }
+              
+              if ((y + j - 1) < 0) {
+                  y_index = 0;
+              } else if ((y + j - 1) > this.height - 1) {
+                  y_index = this.height - 1;
+              } else {
+                  y_index = y + j - 1;
+              }
+              
+              pixelFrame[i][j] = this.pixels[x_index][y_index][color];
+          }
+      }
+      return;
+  }
+  
+  
+  /*
+   * matrix array multiplication
+   * */
+  public short matrixMult(short[][] a, short[][] b) {
+      short sum = 0;
+      
+      for (int i = 0; i < a.length; i++) {
+          for (int j = 0; j < a[0].length; j++) {
+              sum += a[i][j] * b[i][j];
+          }
+      }
+
+      return sum;
   }
 
 
