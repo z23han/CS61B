@@ -32,7 +32,7 @@ public class RunLengthEncoding implements Iterable {
 
     private int width;
     private int height;
-    
+    private DoublyLinkedList colors;
 
 
   /**
@@ -53,6 +53,7 @@ public class RunLengthEncoding implements Iterable {
   
       this.width = width;
       this.height = height;
+      this.colors = new DoublyLinkedList();
   }
 
   /**
@@ -83,7 +84,7 @@ public class RunLengthEncoding implements Iterable {
       this.width = width;
       this.height = height;
       
-      if (red.length == 0 || green.length == 0 || blue.length == 0 || runLengths.length == 0) {
+      if (red.length <= 0 || green.length <= 0 || blue.length <= 0 || runLengths.length <= 0) {
           System.out.println("length shouldnt be zero!");
           System.exit(0);
           
@@ -93,6 +94,21 @@ public class RunLengthEncoding implements Iterable {
           System.out.println("length should be equal!");
           System.exit(0);
           
+      }
+      
+      int sum = 0;
+      for (int i = 0; i < runLengths.length; i++) {
+          sum += runLengths[i];
+      }
+      
+      if (sum != this.width * this.height) {
+          System.out.println("run length not equal to width * height!");
+          System.exit(0);
+      }
+      
+      this.colors = new DoublyLinkedList();
+      for (int i = 0; i < red.length; i++) {
+          this.colors.insert(red[i], green[i], blue[i], runLengths[i]);
       }
       
   }
@@ -112,7 +128,7 @@ public class RunLengthEncoding implements Iterable {
   /**
    *  getHeight() returns the height of the image that this run-length encoding
    *  represents.
-   *
+   *e
    *  @return the height of the image that this run-length encoding represents.
    */
   public int getHeight() {
@@ -129,7 +145,7 @@ public class RunLengthEncoding implements Iterable {
    */
   public RunIterator iterator() {
     // Replace the following line with your solution.
-    return null;
+    return new RunIterator(this.colors.head);
     // You'll want to construct a new RunIterator, but first you'll need to
     // write a constructor in the RunIterator class.
   }
@@ -140,9 +156,48 @@ public class RunLengthEncoding implements Iterable {
    *
    *  @return the PixImage that this RunLengthEncoding encodes.
    */
+  // setPixel(x, y, (short)red, (short)green, (short)blue)
   public PixImage toPixImage() {
     // Replace the following line with your solution.
-    return new PixImage(1, 1);
+    PixImage img = new PixImage(this.width, this.height);
+    
+    Node curNode = colors.head;
+    
+    int cur_x = 0;
+    int cur_y = 0;
+    int temp_length = 0;
+    int temp_red = 0;
+    int temp_green = 0;
+    int temp_blue = 0;
+    
+    while (curNode != null) {
+        
+        temp_length = curNode.color[3];
+        temp_red = curNode.color[0];
+        temp_green = curNode.color[1];
+        temp_blue = curNode.color[2];
+        
+        for (int i = 0; i < temp_length; i++) {
+            img.setPixel(cur_x, cur_y, (short)temp_red, (short)temp_green, (short)temp_blue);
+            cur_x ++;
+            
+            if (cur_x == this.width) {
+                cur_x = 0;
+                cur_y ++;
+            }
+            
+        }
+        
+        curNode = curNode.next;
+    }
+
+    /* check for the width and height correctness */    
+    if (cur_x != (this.width - 1) || cur_y != (this.height - 1)) {
+        System.out.println("width or height wrong!");
+        System.exit(0);
+    }
+    
+    return img;
   }
 
   /**

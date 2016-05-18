@@ -37,7 +37,7 @@ public class RunIterator implements Iterator {
    *  These variables MUST be private.
    */
 
-    
+    private Node current;
 
   /**
    *  RunIterator() constructs a new iterator starting with a specified run.
@@ -53,8 +53,10 @@ public class RunIterator implements Iterator {
   // constructor that you want so that your RunLengthEncoding.iterator()
   // implementation can construct a RunIterator that points to the first run of
   // the encoding.
-  RunIterator() {
+  RunIterator(Node head) {
     // Your solution here.  You may add parameters to the method signature.
+  
+      this.current = head.next;
   }
 
   /**
@@ -65,7 +67,12 @@ public class RunIterator implements Iterator {
    */
   public boolean hasNext() {
     // Replace the following line with your solution.
-    return false;
+    
+      if (this.current == null) {
+          return false;
+      } else {
+          return true;
+      }
   }
 
   /**
@@ -95,7 +102,17 @@ public class RunIterator implements Iterator {
     // call to next() will return the subsequent run.
 
     // Replace the following line with your solution.
-    return new int[4];
+    
+      int[] arr = new int[4];
+      arr[0] = this.current.color[3];
+      arr[1] = this.current.color[0];
+      arr[2] = this.current.color[1];
+      arr[3] = this.current.color[2];
+      
+      this.current = this.current.next;
+      
+      return arr;
+
   }
 
   /**
