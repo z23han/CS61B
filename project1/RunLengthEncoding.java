@@ -30,6 +30,9 @@ public class RunLengthEncoding implements Iterable {
    *  These variables MUST be private.
    */
 
+    private int width;
+    private int height;
+    private short[][][] pixels;
 
 
 
@@ -48,6 +51,10 @@ public class RunLengthEncoding implements Iterable {
 
   public RunLengthEncoding(int width, int height) {
     // Your solution here.
+  
+      this.width = width;
+      this.height = height;
+      this.pixels = new short[this.width][this.height][3];
   }
 
   /**
@@ -74,6 +81,10 @@ public class RunLengthEncoding implements Iterable {
   public RunLengthEncoding(int width, int height, int[] red, int[] green,
                            int[] blue, int[] runLengths) {
     // Your solution here.
+  
+      this.width = width;
+      this.height = height;
+      this.
   }
 
   /**
@@ -85,7 +96,7 @@ public class RunLengthEncoding implements Iterable {
 
   public int getWidth() {
     // Replace the following line with your solution.
-    return 1;
+    return this.width;
   }
 
   /**
@@ -96,7 +107,7 @@ public class RunLengthEncoding implements Iterable {
    */
   public int getHeight() {
     // Replace the following line with your solution.
-    return 1;
+    return this.height;
   }
 
   /**
