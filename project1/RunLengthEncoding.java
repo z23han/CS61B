@@ -32,8 +32,7 @@ public class RunLengthEncoding implements Iterable {
 
     private int width;
     private int height;
-    private short[][][] pixels;
-
+    
 
 
   /**
@@ -54,7 +53,6 @@ public class RunLengthEncoding implements Iterable {
   
       this.width = width;
       this.height = height;
-      this.pixels = new short[this.width][this.height][3];
   }
 
   /**
@@ -84,7 +82,19 @@ public class RunLengthEncoding implements Iterable {
   
       this.width = width;
       this.height = height;
-      this.
+      
+      if (red.length == 0 || green.length == 0 || blue.length == 0 || runLengths.length == 0) {
+          System.out.println("length shouldnt be zero!");
+          System.exit(0);
+          
+      }
+      
+      if (red.length != green.length || red.length != blue.length || red.length != runLengths.length) {
+          System.out.println("length should be equal!");
+          System.exit(0);
+          
+      }
+      
   }
 
   /**

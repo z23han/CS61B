@@ -37,8 +37,7 @@ public class RunIterator implements Iterator {
    *  These variables MUST be private.
    */
 
-
-
+    
 
   /**
    *  RunIterator() constructs a new iterator starting with a specified run.
