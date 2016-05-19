@@ -52,6 +52,9 @@ public class DList {
    */
   public DList() {
     //  Your solution here.
+  
+      this.head = null;
+      this.size = 0;
   }
 
   /**
@@ -60,7 +63,7 @@ public class DList {
    *  Performance:  runs in O(1) time.
    */
   public boolean isEmpty() {
-    return size == 0;
+    return this.size == 0;
   }
 
   /** 
@@ -69,7 +72,7 @@ public class DList {
    *  Performance:  runs in O(1) time.
    */
   public int length() {
-    return size;
+    return this.size;
   }
 
   /**
@@ -79,6 +82,24 @@ public class DList {
    */
   public void insertFront(Object item) {
     // Your solution here.
+
+      DListNode newNode;
+      
+      if (this.head == null) {
+          newNode = new DListNode(item, null, null);
+          newNode.prev = newNode;
+          newNode.next = newNode;
+      } else {
+     
+          DListNode headNode = this.head;
+          DListNode headPrev = this.head.prev;
+          newNode = new DListNode(item, headPrev, headNode);
+          headNode.prev = newNode;
+          headPrev.next = newNode;
+      }
+      this.head = newNode;
+      this.size++;
+      
   }
 
   /**
@@ -88,6 +109,22 @@ public class DList {
    */
   public void insertBack(Object item) {
     // Your solution here.
+  
+      DListNode newNode;
+      
+      if (this.head == null) {
+          newNode = new DListNode(item, null, null);
+          newNode.prev = newNode;
+          newNode.next = newNode;
+      } else {
+     
+          DListNode headNode = this.head;
+          DListNode headPrev = this.head.prev;
+          newNode = new DListNode(item, headPrev, headNode);
+          headNode.prev = newNode;
+          headPrev.next = newNode;
+      }
+      this.size++;
   }
 
   /**
@@ -101,6 +138,12 @@ public class DList {
    */
   public DListNode front() {
     // Your solution here.
+  
+      if (this.size == 0 || this.head == null) {
+          return null;
+      }
+      
+      return this.head;
   }
 
   /**
@@ -114,6 +157,14 @@ public class DList {
    */
   public DListNode back() {
     // Your solution here.
+  
+      if (this.size == 0 || this.head == null) {
+          return null;
+      }
+      
+      
+      return head.prev;
+      
   }
 
   /**
@@ -128,6 +179,12 @@ public class DList {
    */
   public DListNode next(DListNode node) {
     // Your solution here.
+  
+      if (node == null || node.next == this.head) {
+          return null;
+      }
+      
+      return node.next;
   }
 
   /**
@@ -142,6 +199,12 @@ public class DList {
    */
   public DListNode prev(DListNode node) {
     // Your solution here.
+  
+      if (node == null || node == this.head) {
+          return null;
+      }
+      
+      return node.prev;
   }
 
   /**
@@ -153,6 +216,17 @@ public class DList {
    */
   public void insertAfter(Object item, DListNode node) {
     // Your solution here.
+  
+      if (node == null) {
+          return;
+      }
+      
+      DListNode nextNode = node.next;
+      DListNode newNode = new DListNode(item, node, nextNode);
+      nextNode.prev = newNode;
+      node.next = newNode;
+      
+      return;
   }
 
   /**
@@ -164,6 +238,17 @@ public class DList {
    */
   public void insertBefore(Object item, DListNode node) {
     // Your solution here.
+  
+      if (node == null) {
+          return;
+      }
+     
+      DListNode prevNode = node.prev;
+      DListNode newNode = new DListNode(item, prevNode, node);
+      prevNode.next = newNode;
+      node.prev = newNode;
+      
+      return;
   }
 
   /**
@@ -172,6 +257,23 @@ public class DList {
    */
   public void remove(DListNode node) {
     // Your solution here.
+  
+      if (node == null) {
+          return;
+      }
+      
+      if (node == this.head) {
+          this.head = node.next;
+          
+      }
+      
+      DListNode prevNode = node.prev;
+      DListNode nextNode = node.next;
+      prevNode.next = nextNode;
+      nextNode.prev = prevNode;
+      
+      return;
+      
   }
 
   /**
@@ -184,7 +286,9 @@ public class DList {
    */
   public String toString() {
     String result = "[  ";
-    DListNode current = head.next;
+    DListNode current = this.head;
+    result = result + current.item + "  ";
+    current = current.next;
     while (current != head) {
       result = result + current.item + "  ";
       current = current.next;
