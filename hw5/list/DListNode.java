@@ -98,6 +98,12 @@ public class DListNode extends ListNode {
     //   "this" is null.  Remember that this node's "myList" field tells you
     //   what DList it's in.  You should use myList.newNode() to create the
     //   new node.
+  
+   DListNode newNode = new DListNode(item, (DList)this.myList, this, this.next);
+   this.next = newNode;
+   this.next.prev = newNode;
+   this.myList.size++;
+   
   }
 
   /**
@@ -118,6 +124,12 @@ public class DListNode extends ListNode {
     //   "this" is null.  Remember that this node's "myList" field tells you
     //   what DList it's in.  You should use myList.newNode() to create the
     //   new node.
+  
+    DListNode newNode = new DListNode(item, (DList)this.myList, this.prev, this);
+    this.prev.next = newNode;
+    this.prev = newNode;
+    this.myList.size++;
+    
   }
 
   /**
@@ -136,14 +148,16 @@ public class DListNode extends ListNode {
     //   but changes are necessary.  For instance, there is no need to check if
     //   "this" is null.  Remember that this node's "myList" field tells you
     //   what DList it's in.
-
-
+    
+    this.prev.next = this.next;
+    this.next.prev = this.prev;
+    this.myList.size--;
 
     // Make this node an invalid node, so it cannot be used to corrupt myList.
-    myList = null;
+    this.myList = null;
     // Set other references to null to improve garbage collection.
-    next = null;
-    prev = null;
+    this.next = null;
+    this.prev = null;
   }
 
 }

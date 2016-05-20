@@ -9,6 +9,7 @@ import list.*;
 public class Set {
   /* Fill in the data fields here. */
 
+    protected List list;
   /**
    * Set ADT invariants:
    *  1)  The Set's elements must be precisely the elements of the List.
@@ -24,6 +25,8 @@ public class Set {
    **/
   public Set() { 
     // Your solution here.
+  
+      this.list = new DList();
   }
 
   /**
@@ -33,7 +36,8 @@ public class Set {
    **/
   public int cardinality() {
     // Replace the following line with your solution.
-    return 0;
+
+      return list.length();
   }
 
   /**
@@ -46,6 +50,35 @@ public class Set {
    **/
   public void insert(Comparable c) {
     // Your solution here.
+  
+      DListNode cur_node = (DListNode)list.front();
+      
+      try {
+          if (cur_node == null) {
+              cur_node.insertBefore(c);
+              return;
+          }
+          
+      while (cur_node != null) {
+          if (((Comparable)(cur_node.item())).compareTo(c) == 0) {
+              // found the same item, return directly
+              return;
+          } else if (((Comparable)(cur_node.item())).compareTo(c) < 0) {
+              cur_node = (DListNode)cur_node.next();
+              
+          } else {
+              cur_node.insertBefore(c);
+              return;
+          }
+      }
+      cur_node.insertBefore(c);
+      
+      } catch (InvalidNodeException i) {
+          i.printStackTrace();
+          
+      }
+
+      return;
   }
 
   /**
@@ -65,6 +98,41 @@ public class Set {
    **/
   public void union(Set s) {
     // Your solution here.
+  
+      DList slist = (DList)s.list;
+      
+      DListNode n1 = (DListNode)list.front();
+      DListNode n2 = (DListNode)slist.front();
+      
+      try {
+      while (n1 != null || n2 != null) {
+          if (n1 != null && n2 != null) {
+              if (((Comparable)(n1.item())).compareTo(n2.item()) == 0) {
+                  n1 = (DListNode)n1.next();
+                  n2 = (DListNode)n2.next();
+                  
+              } else if (((Comparable)(n1.item())).compareTo(n2.item()) < 0) {
+                  n1 = (DListNode)n1.next();
+              } else {
+                  n1.insertBefore(n2.item());
+                  n2 = (DListNode)n2.next();
+                  
+              }
+              
+          } else if (n1 != null) {
+              n1 = (DListNode)n1.next();
+              
+          } else if (n2 != null) {
+              n1.insertBefore(n2.item());
+              n2 = (DListNode)n2.next();
+              
+          }
+      }
+      } catch (InvalidNodeException i) {
+          
+          i.printStackTrace();
+      }
+      
   }
 
   /**
@@ -82,6 +150,40 @@ public class Set {
    **/
   public void intersect(Set s) {
     // Your solution here.
+  
+      DList slist = (DList)s.list;
+      
+      DListNode n1 = (DListNode)list.front();
+      DListNode n2 = (DListNode)slist.front();
+      DListNode temp = n1;
+      
+      try {
+      while (n1 != null || n2 != null) {
+          if (n1 != null && n2 != null) {
+              if (((Comparable)n1.item()).compareTo(n2.item()) < 0) {
+                  temp = (DListNode)n1.next();
+                  n1.remove();
+                  n1 = temp;
+              } else if (((Comparable)n1.item()).compareTo(n2.item()) > 0) {
+                  n2 = (DListNode)n2.next();
+              } else {
+                  n1 = (DListNode)n1.next();
+                  n2 = (DListNode)n2.next();
+              }
+              
+          } else if (n1 != null) {
+              temp = (DListNode)n1.next();
+              n1.remove();
+              n1 = temp;
+          } else if (n2 != null) {
+              n2 = (DListNode)n2.next();
+          } else {
+              break;
+          }
+      }
+      } catch (InvalidNodeException i) {
+          i.printStackTrace();
+      }
   }
 
   /**
