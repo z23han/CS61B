@@ -9,7 +9,7 @@ package list;
  *  the next node in the list.
  */
 
-class SListNode {
+public class SListNode {
   Object item;
   SListNode next;
 
@@ -31,6 +31,10 @@ class SListNode {
   SListNode(Object obj, SListNode next) {
     item = obj;
     this.next = next;
+  }
+  
+  public void addNext(SListNode next) {
+      this.next = next;
   }
 
 }

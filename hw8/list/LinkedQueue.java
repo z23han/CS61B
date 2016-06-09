@@ -16,6 +16,16 @@ public class LinkedQueue implements Queue {
     head = null;
     tail = null;
   }
+  
+  /* return head of LinkedQueue */
+  public SListNode head() {
+      return head;
+  }
+  
+  /* return tail of LinkedQueue */
+  public SListNode tail() {
+      return tail;
+  }
 
   /** 
    *  size() returns the size of this Queue.
