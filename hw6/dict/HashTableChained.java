@@ -20,7 +20,8 @@ public class HashTableChained implements Dictionary {
    *  Place any data fields here.
    **/
 
-
+    protected int size;
+    protected Entry[] bucket;           // bucket is a Entry array, mapping key to values
 
   /** 
    *  Construct a new empty hash table intended to hold roughly sizeEstimate
@@ -30,6 +31,13 @@ public class HashTableChained implements Dictionary {
 
   public HashTableChained(int sizeEstimate) {
     // Your solution here.
+  
+      size = sizeEstimate;
+      bucket = new Entry[size];
+      
+      for (int i = 0; i < size; i++) {
+          bucket[i] = new Entry(i, new Node());
+      }
   }
 
   /** 
@@ -39,6 +47,13 @@ public class HashTableChained implements Dictionary {
 
   public HashTableChained() {
     // Your solution here.
+  
+      size = 97;
+      bucket = new Entry[size];
+      
+      for (int i = 0; i < size; i++) {
+          bucket[i] = new Entry(i, new Node());
+      }
   }
 
   /**
@@ -51,7 +66,8 @@ public class HashTableChained implements Dictionary {
 
   int compFunction(int code) {
     // Replace the following line with your solution.
-    return 88;
+    
+      return code % size();
   }
 
   /** 
@@ -63,7 +79,7 @@ public class HashTableChained implements Dictionary {
 
   public int size() {
     // Replace the following line with your solution.
-    return 0;
+    return size;
   }
 
   /** 
@@ -74,7 +90,7 @@ public class HashTableChained implements Dictionary {
 
   public boolean isEmpty() {
     // Replace the following line with your solution.
-    return true;
+    return size == 0;
   }
 
   /**
@@ -92,14 +108,22 @@ public class HashTableChained implements Dictionary {
 
   public Entry insert(Object key, Object value) {
     // Replace the following line with your solution.
-    return null;
+    
+      int codeKey = compFunction(key.hashCode());
+      
+      /* if null, creat a new list entry */
+      Node node = bucket[codeKey].value();
+      EntryNode e_node = node.pointer();
+      if (e_node.value() == null) {
+          
+      }
+      return ;
   }
 
   /** 
    *  Search for an entry with the specified key.  If such an entry is found,
-   *  return it; otherwise return null.  If several entries have the specified
+   *  return it; otherwise return null.  If several entries have the specifn size == 0 *  key, choose one arbitrarily and return it.
    *  key, choose one arbitrarily and return it.
-   *
    *  This method should run in O(1) time if the number of collisions is small.
    *
    *  @param key the search key.

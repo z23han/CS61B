@@ -64,8 +64,8 @@ public class Maze {
         }
       }
     }
-
-
+    
+    
 
     /**
      * Fill in the rest of this method.  You should go through all the walls of
@@ -77,8 +77,63 @@ public class Maze {
      * integer.  randInt() generates different numbers every time the program
      * is run, so that you can make lots of different mazes.
      **/
+    
+    DisjointSets myMaze = new DisjointSets(horiz * vert);
+    
+    /* create an array representing horizontal and vertical walls */
+    int[] myWalls = new int[horiz*(vert-1) + (horiz-1)*vert];
+    int l = -1 * horiz * (vert - 1);
+    int k = 0;
 
+    while (l < (horiz-1) * vert) {
+        myWalls[k] = l;
+        k++;
+        l++;
+    }
 
+    /* randomly order the elements of the wall */
+    for (i = myWalls.length; i > 0; i--) {
+        int r = randInt(i);
+        int nextLast = myWalls[i-1];
+        int rWall = myWalls[r];
+        myWalls[i-1] = rWall;
+        myWalls[r] = nextLast;
+    }
+    
+    
+    /* visit walls in order */
+    for (i = 0; i < myWalls.length; i++) {
+        
+        int c = myWalls[i];
+        if (c < 0) {
+            c = -1 * (c+1);
+            int xTop = c / (vert-1);
+            int yTop = c % (vert-1);
+            int xBottom = xTop;
+            int yBottom = yTop;
+            int cTop = yTop * horiz + xBottom;
+            int cBottom = yBottom * horiz + xBottom;
+            
+            if (myMaze.find(cTop)!=myMaze.find(cBottom)) {
+                hWalls[xTop][yTop] = false;
+                myMaze.union(myMaze.find(cTop), myMaze.find(cBottom));
+            }
+        } else {
+            
+            int xLeft = c % (horiz - 1);
+            int yLeft = c / (horiz - 1);
+            int xRight = xLeft + 1;
+            int yRight = yLeft;
+            int cRight = yLeft * horiz + xRight;
+            int cLeft = yLeft * horiz + xLeft;
+            
+            if (myMaze.find(cRight) != myMaze.find(cLeft)) {
+                vWalls[xLeft][yLeft] = false;
+                myMaze.union(myMaze.find(cRight), myMaze.find(cLeft));
+            }
+        }
+        
+    }
 
   }
 
