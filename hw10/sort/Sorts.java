@@ -7,8 +7,8 @@ public class Sorts {
   /**
    *  Place any final static fields you would like to have here.
    **/
-
-
+    public static int[] allInts = new int[16];
+    
   /**
    *  countingSort() sorts an array of int keys according to the
    *  values of _one_ of the base-16 digits of each key.  "whichDigit"
@@ -26,7 +26,33 @@ public class Sorts {
    **/
   public static int[] countingSort(int[] keys, int whichDigit) {
     // Replace the following line with your solution.
-    return null;
+    
+      for (int i = 0; i < allInts.length; i++) {
+          allInts[i] = 0;
+      }
+     
+      int i = 0;
+      int j = 0;
+
+      int[] count = new int[keys.length];
+      int divisor = (int) Math.pow(16, whichDigit);
+      
+      while (i < 16) {
+          
+          if (j == keys.length) {
+              return count;
+          }
+          
+          for (int k = 0; k < keys.length; k++) {
+              if ((keys[k]/divisor & 15) == i) {
+                  count[j] = keys[k];
+                  j++;
+              }
+          }
+          i++;
+          
+      }
+      return count;
   }
 
   /**
@@ -51,9 +77,10 @@ public class Sorts {
   public static void yell(int[] keys) {
     System.out.print("keys are [ ");
     for (int i = 0; i < keys.length; i++) {
-      System.out.print(Integer.toString(keys[i], 16) + " ");
+      System.out.print(Integer.toString(keys[i], 16) + "   ");
     }
     System.out.println("]");
+    System.out.println();
   }
 
   /**
@@ -83,7 +110,8 @@ public class Sorts {
                    Integer.parseInt("40013879", 16) };
 
     yell(keys);
-    keys = radixSort(keys);
+    keys = countingSort(keys, 1);
+    //keys = radixSort(keys);
     yell(keys);
   }
 
